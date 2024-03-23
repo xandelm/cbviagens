@@ -7,6 +7,21 @@ echo "Implemente aqui o script para executar a sua solução"
 #pip install django-rest-framework
 #pip install django-cors-headers
 #pip install djoser
+#python manage.py migrate
+#python manage.py runserver
+
+
+## Update package list
+#sudo apt-get update
+
+# Install curl to fetch the Node.js setup script
+#sudo apt-get install -y curl
+
+# Fetch and execute the Node.js setup script
+#curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
+# Install Node.js
+#sudo apt-get install -y nodejs
 
 
 #deactivate

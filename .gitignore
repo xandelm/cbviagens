@@ -26,3 +26,8 @@ pnpm-debug.log*
 app/Lib
 app/Scripts
 app/pyvenv.cfg
+*.pyc
+
+# SQLite
+db.sqlite3
+db.sqlite3db-journal
