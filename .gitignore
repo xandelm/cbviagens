@@ -21,3 +21,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+#Python virtual environment
+app/Lib
+app/Scripts
+app/pyvenv.cfg
