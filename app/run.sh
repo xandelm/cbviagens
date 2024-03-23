@@ -7,6 +7,7 @@ echo "Implemente aqui o script para executar a sua solução"
 #pip install django-rest-framework
 #pip install django-cors-headers
 #pip install djoser
+#yarn global add @quasar/cli
 #python manage.py migrate
 #python manage.py runserver
 
