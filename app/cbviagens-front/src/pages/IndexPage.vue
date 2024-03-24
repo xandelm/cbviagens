@@ -1,20 +1,5 @@
-<!--<template>-->
-<!--  <q-page class="row flex-center">-->
-
-
-<!--  </q-page>-->
-<!--</template>-->
-
-<!--<script setup>-->
-<!--import TravelCalculator from 'components/TravelCalculator.vue';-->
-<!--defineOptions({-->
-<!--  name: 'IndexPage'-->
-<!--});-->
-<!--</script>-->
-
 <template>
   <div class="index-page text-dark">
-    <!-- Hero section -->
     <div class="hero-section">
       <div class="hero-content">
         <h1>Bem vindo ao CBViagens</h1>
@@ -24,11 +9,9 @@
       </div>
       <div class="hero-image">
         <q-img src="hero_img.jpg" />
-        <!-- Add your hero image here -->
       </div>
     </div>
 
-    <!-- Features section -->
     <div class="features-section" id="features">
       <h2>Funcionalidades</h2>
       <div class="row flex flex-center feature-cards">
@@ -67,9 +50,7 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom styles here */
 
-/* Hero section styles */
 .hero-section {
   display: flex;
   align-items: center;
@@ -85,7 +66,6 @@ export default {
   flex: 1;
 }
 
-/* Features section styles */
 .features-section {
   padding: 100px 50px;
 }
@@ -100,22 +80,7 @@ export default {
   text-align: center;
 }
 
-/* Testimonials section styles */
-.testimonials-section {
-  background-color: #f8f8f8;
-  padding: 100px 50px;
-}
 
-.testimonial {
-  margin-bottom: 50px;
-}
 
-/* Footer styles */
-.footer {
-  background-color: #333;
-  color: #fff;
-  padding: 20px 50px;
-  text-align: center;
-}
 </style>
 

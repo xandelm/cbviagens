@@ -13,13 +13,6 @@ from rest_framework.decorators import api_view
 
 from datetime import datetime
 def parse_duration(duration):
-    #Parse the ISO 8601 duration format with regex
-    #convert datetime.delta duration variable to string
-
-
-    # duration_parts = re.findall(r'(\d+H|\d+M|\d+S)', duration)
-    # duration_str = ''.join(duration_parts)
-    # return duration.strftime('%H:%M:%S')
     total_seconds = duration.total_seconds()
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60

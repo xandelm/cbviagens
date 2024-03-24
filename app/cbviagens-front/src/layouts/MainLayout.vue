@@ -62,13 +62,11 @@ defineOptions({
 const linksList = [
     {
     title: 'Página Inicial',
-    // caption: 'quasar.dev',
     icon: 'home',
     link: '/'
   },
   {
     title: 'Calculadora de Viagens',
-    // caption: 'quasar.dev',
     icon: 'sym_o_calculate',
     link: '/calc'
   },

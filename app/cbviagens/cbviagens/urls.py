@@ -20,8 +20,6 @@ from transport.views import get_best_transport_options
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('admin/', include('djoser.urls')),
-    # path('api/v1/', include('djoser.urls')),
     path('transport/', include('transport.urls')),
     path('api/', include('transport.urls')),
     path('api/get_best_transport_options', get_best_transport_options, name='get_best_transport_options'),

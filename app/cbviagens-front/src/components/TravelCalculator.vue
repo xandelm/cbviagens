@@ -28,10 +28,6 @@ const filterFn = (val, update) => {
 }
 
 
-
-// TODO: add linklist active class, make an index page, remove rules from selects and add modal like the video
-
-
 const bestOptions = reactive({
   confort: {},
   econ: {}
@@ -54,9 +50,7 @@ const {items} = toRefs(state)
 const fetchTransportData = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:3000/api/transport/')
-    // console.log('Response data:', response.data)
     return response.data
-    // items.value = response.data
   } catch (error) {
     console.error(error)
     return null;
@@ -78,6 +72,10 @@ onMounted(async () => {
 const citiesOptions = computed(() => filteredOptions.value.length > 0 ? filteredOptions.value : cityNames.value)
 
 async function onSubmit() {
+  if(!citiesModel.value || !date.value) {
+    dialogVisible.value = true
+    return
+  }
   const city = citiesModel.value
   try{
     const response = await axios.get(`http://127.0.0.1:3000/api/get_best_transport_options?city=${city}`);
@@ -87,25 +85,30 @@ async function onSubmit() {
   }
   catch (error) {
     console.error(error)
-  //   TODO: improve this
   }
 }
+
+const dialogVisible = ref(false)
 
 </script>
 
 <template>
+    <q-dialog v-model="dialogVisible" backdrop-filter="brightness(60%)">
+      <q-card class="q-pa-lg">
 
-  <!--      <div class="column" style="height: 250px">-->
-  <!--      <div class="col">-->
-  <!--        .col-->
-  <!--      </div>-->
-  <!--      <div class="col-8">-->
-  <!--        .col-8-->
-  <!--      </div>-->
-  <!--      <div class="col">-->
-  <!--        .col-->
-  <!--      </div>-->
-  <!--    </div>-->
+        <q-card-section class="row flex flex-center q-pa-xs">
+          <q-icon name="sym_o_error" size="50px" color="accent">
+          </q-icon>
+        </q-card-section>
+        <q-card-section class="row items-center q-pb-none text-h6 text-dark q-mb-lg">
+          Insira os valores para realizar a cotação.
+        </q-card-section>
+
+        <q-card-actions align="center">
+          <q-btn flat label="Fechar" class="bg-secondary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   <div class="row col-11 flex-center">
     <q-card row class="col-11 text-dark">
       <q-card-section class="bg-primary text-brand-white row q-py-lg q-px-xl">
@@ -132,7 +135,6 @@ async function onSubmit() {
                   label="Destino"
                   :options="citiesOptions"
                   @filter="filterFn"
-                  :rules="[val => !!val || 'Selecione um destino']"
                 >
                   <template v-slot:before>
                     <q-icon name="flight_takeoff"/>
@@ -147,7 +149,7 @@ async function onSubmit() {
                 </q-select>
 
                 <div class="row col-12 flex flex-center">
-                  <q-select filled v-model="date" mask="date" :rules="['date']" class="col-6" @onclick="toggleDate">
+                  <q-select filled v-model="date" mask="date"  class="col-6" @onclick="toggleDate">
                     <q-popup-proxy class="col-12" cover transition-show="scale" transition-hide="scale">
                       <q-date v-model="date" class="col-6">
                         <div class="row items-center justify-end">
@@ -159,11 +161,6 @@ async function onSubmit() {
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy v-model="datePickerVisible" cover transition-show="scale"
                                        transition-hide="scale">
-                          <!--                    <q-date v-model="date">-->
-                          <!--                      <div class="row items-center justify-end">-->
-                          <!--                        <q-btn v-close-popup label="Close" color="primary" flat/>-->
-                          <!--                      </div>-->
-                          <!--                    </q-date>-->
                         </q-popup-proxy>
                       </q-icon>
                     </template>
@@ -253,7 +250,6 @@ async function onSubmit() {
           </div>
         </div>
 
-        <!--place a button here and make it go to the lower right of the card-->
         <q-card-actions align="right">
           <q-btn @click="clear" flat label="Limpar" class="bg-warning text-dark q-mt-lg q-py-sm"
                  padding="0.5rem 1.5rem"/>

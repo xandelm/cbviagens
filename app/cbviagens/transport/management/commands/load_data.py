@@ -6,7 +6,6 @@ from transport.models import Transport
 from decimal import Decimal
 import datetime
 
-# '../../../../../data.json'
 class Command(BaseCommand):
     help = 'Load data from JSON file to database'
     data_file = os.path.join(settings.BASE_DIR,  'transport', 'management', 'commands', 'data.json')
