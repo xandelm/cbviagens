@@ -1,11 +1,8 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted, onUpdated, reactive, toRefs, computed} from 'vue'
+import axios from "axios";
 
 const citiesModel = ref(null)
-const cityNames = [
-  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
-]
-const citiesOptions = ref(cityNames)
 
 const date = ref(null)
 const datePickerVisible = ref(false)
@@ -14,42 +11,22 @@ const toggleDate = () => {
 }
 
 const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+
+const filteredOptions = ref([])
 const filterFn = (val, update) => {
   if (val === '') {
     update(() => {
-      citiesOptions.value = cityNames
+      filteredOptions.value = []
     })
     return
   }
 
   update(() => {
     const needle = val.toLowerCase()
-    citiesOptions.value = cityNames.filter(v => v.toLowerCase().indexOf(needle) > -1)
+    filteredOptions.value = cityNames.value.filter(v => v.toLowerCase().indexOf(needle) > -1)
   })
 }
 
-const items = ref([
-  {
-    "id": 1,
-    "name": "Expresso Oriente",
-    "price_confort": "R$ 52.10",
-    "price_econ": "R$ 21.50",
-    "city": "São Paulo",
-    "duration": "12h",
-    "seat": "12C",
-    "bed": "5A"
-  },
-  {
-    "id": 2,
-    "name": "Expresso Oriente",
-    "price_confort": "R$ 194.20",
-    "price_econ": "R$ 43.10",
-    "city": "Belo Horizonte",
-    "duration": "18h",
-    "seat": "1A",
-    "bed": "4B"
-  },
-])
 
 const bestOptions = ref({
   confort: {
@@ -81,6 +58,37 @@ const clear = () => {
 
 }
 
+const state = reactive({
+  items: []
+})
+const {items} = toRefs(state)
+
+const fetchTransportData = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:3000/api/transport/')
+    // console.log('Response data:', response.data)
+    return response.data
+    // items.value = response.data
+  } catch (error) {
+    console.error(error)
+    return null;
+  }
+}
+
+
+
+const cityNames = ref([])
+onMounted(async () => {
+  const data = await fetchTransportData()
+  if (data) {
+    items.value = data
+    const uniqueCityNames = new Set(data.map(item => item.city))
+    cityNames.value = Array.from(uniqueCityNames)
+    citiesOptions.value = cityNames.value
+  }
+})
+
+const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredOptions.value : cityNames.value)
 
 </script>
 
@@ -117,9 +125,9 @@ const clear = () => {
                 <q-select
                   filled
                   class="row col-6 q-mb-lg"
-                  v-model="citiesModel"
                   use-input
                   input-debounce="0"
+                  v-model="citiesModel"
                   label="Destino"
                   :options="citiesOptions"
                   @filter="filterFn"
@@ -130,7 +138,7 @@ const clear = () => {
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey">
-                        Nenhum destino encontrado
+                        Nenhum dado encontrado
                       </q-item-section>
                     </q-item>
                   </template>
@@ -162,7 +170,7 @@ const clear = () => {
                 </div>
               </q-form>
 
-              <q-btn  class="q-mt-lg bg-secondary q-py-sm q-px-lg" label="Buscar" flat/>
+              <q-btn class="q-mt-lg bg-secondary q-py-sm q-px-lg" label="Buscar" flat/>
             </div>
 
 
@@ -178,31 +186,31 @@ const clear = () => {
 
                 <div class="row">
 
-                  <q-card class="row q-mx-lg q-my-lg" flat >
+                  <q-card class="row q-mx-lg q-my-lg" flat>
                     <q-card-section horizontal class="">
                       <q-card-section class="row bg-secondary text-white flex flex-center">
                         <q-icon name="fa-solid fa-hand-holding-usd col-2" size="2.1rem"></q-icon>
                       </q-card-section>
                       <q-card-section class="bg-brand-grey-darker text-center col-10">
                         <div class="text-subtitle1 text-weight-medium">
-                          {{bestOptions.confort.name.toUpperCase()}}
+                          {{ bestOptions.confort.name.toUpperCase() }}
                         </div>
                         <div class="text-body2">
-                          Leito: {{bestOptions.confort.seat}} (Completo)
+                          Leito: {{ bestOptions.confort.seat }} (Completo)
                         </div>
                         <div>
-                          Tempo estimado: {{bestOptions.confort.duration}}
+                          Tempo estimado: {{ bestOptions.confort.duration }}
                         </div>
                       </q-card-section>
 
                     </q-card-section>
                   </q-card>
-                  <q-card class="row q-mx-lg bg-brand-grey-darker q-my-lg flex-center" flat >
+                  <q-card class="row q-mx-lg bg-brand-grey-darker q-my-lg flex-center" flat>
                     <q-card-section class="col-12 text-center flex flex-center q-pb-none text-weight-bold">
                       Preço:
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                      {{bestOptions.confort.price_confort}}
+                      {{ bestOptions.confort.price_confort }}
                     </q-card-section>
                   </q-card>
 
@@ -218,13 +226,13 @@ const clear = () => {
                       </q-card-section>
                       <q-card-section class="bg-brand-grey-darker text-center col-10">
                         <div class="text-subtitle1 text-weight-medium">
-                          {{bestOptions.econ.name.toUpperCase()}}
+                          {{ bestOptions.econ.name.toUpperCase() }}
                         </div>
                         <div class="text-body2">
-                          Poltrona: {{bestOptions.econ.seat}}
+                          Poltrona: {{ bestOptions.econ.seat }}
                         </div>
                         <div>
-                          Tempo estimado: {{bestOptions.econ.duration}}
+                          Tempo estimado: {{ bestOptions.econ.duration }}
                         </div>
                       </q-card-section>
 
@@ -235,7 +243,7 @@ const clear = () => {
                       Preço:
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                      {{bestOptions.econ.price_econ}}
+                      {{ bestOptions.econ.price_econ }}
                     </q-card-section>
                   </q-card>
                 </div>
@@ -244,9 +252,10 @@ const clear = () => {
           </div>
         </div>
 
-<!--place a button here and make it go to the lower right of the card-->
+        <!--place a button here and make it go to the lower right of the card-->
         <q-card-actions align="right">
-          <q-btn @click="clear" flat label="Limpar" class="bg-warning text-dark q-mt-lg q-py-sm" padding="0.5rem 1.5rem"/>
+          <q-btn @click="clear" flat label="Limpar" class="bg-warning text-dark q-mt-lg q-py-sm"
+                 padding="0.5rem 1.5rem"/>
         </q-card-actions>
       </q-card-section>
     </q-card>

@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = 'Load data from JSON file to database'
     data_file = os.path.join(settings.BASE_DIR,  'transport', 'management', 'commands', 'data.json')
     def handle(self, *args, **options):
-        with open(self.data_file) as f:
+        with open(self.data_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
             for item in data["transport"]:
                 print(type(item))
