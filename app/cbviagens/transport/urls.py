@@ -7,6 +7,8 @@ from .views import TransportViewSet
 router = DefaultRouter()
 router.register(r'transport', TransportViewSet)
 
+app_name = 'transport'
+
 urlpatterns = [
     path('', include(router.urls)),
 ]

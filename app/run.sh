@@ -9,7 +9,7 @@ echo "Implemente aqui o script para executar a sua solução"
 #pip install djoser
 #yarn global add @quasar/cli
 #python manage.py migrate
-#python manage.py runserver
+#python manage.py runserver 3000
 
 
 ## Update package list

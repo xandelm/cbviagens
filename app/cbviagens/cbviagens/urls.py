@@ -22,5 +22,5 @@ urlpatterns = [
     # path('admin/', include('djoser.urls')),
     # path('api/v1/', include('djoser.urls')),
     path('transport/', include('transport.urls')),
-    path('api/v1/', include('transport.urls')),
+    path('api/', include('transport.urls')),
 ]
