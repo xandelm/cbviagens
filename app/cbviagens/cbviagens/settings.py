@@ -27,15 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8080','http://127.0.0.1:8000']
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000','http://127.0.0.1:3000', 'http://localhost:8080']
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated'
-    )
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated'
+    # )
 }
 
 # Application definition
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     # 'rest_framework_authtoken',
     'corsheaders',
     'djoser',
+    'transport',
+    'cbviagens',
 ]
 
 MIDDLEWARE = [
