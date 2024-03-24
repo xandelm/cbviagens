@@ -28,33 +28,21 @@ const filterFn = (val, update) => {
 }
 
 
-const bestOptions = ref({
-  confort: {
-    "id": 1,
-    "name": "Expresso Oriente",
-    "price_confort": "R$ 52.10",
-    "price_econ": "R$ 21.50",
-    city: "São Paulo",
-    duration: "12h",
-    seat: "12C",
-    bed: "5A"
-  },
-  econ: {
-    id: 2,
-    name: "Expresso Oriente",
-    price_confort: "R$ 194.20",
-    price_econ: "R$ 43.10",
-    city: "Belo Horizonte",
-    duration: "18h",
-    seat: "1A",
-    bed: "4B"
-  }
-})
 
+// TODO: add linklist active class, make an index page, remove rules from selects and add modal like the video
+
+
+const bestOptions = reactive({
+  confort: {},
+  econ: {}
+})
 const clear = () => {
   items.value = []
   citiesModel.value = null
   date.value = null
+  bestOptions.confort = {}
+  bestOptions.econ = {}
+
 
 }
 
@@ -76,7 +64,6 @@ const fetchTransportData = async () => {
 }
 
 
-
 const cityNames = ref([])
 onMounted(async () => {
   const data = await fetchTransportData()
@@ -88,7 +75,21 @@ onMounted(async () => {
   }
 })
 
-const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredOptions.value : cityNames.value)
+const citiesOptions = computed(() => filteredOptions.value.length > 0 ? filteredOptions.value : cityNames.value)
+
+async function onSubmit() {
+  const city = citiesModel.value
+  try{
+    const response = await axios.get(`http://127.0.0.1:3000/api/get_best_transport_options?city=${city}`);
+    console.log(response.data)
+    bestOptions.confort = response.data.confort
+    bestOptions.econ = response.data.econ
+  }
+  catch (error) {
+    console.error(error)
+  //   TODO: improve this
+  }
+}
 
 </script>
 
@@ -106,7 +107,7 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
   <!--      </div>-->
   <!--    </div>-->
   <div class="row col-11 flex-center">
-    <q-card row class="col-11 text-dark my-card">
+    <q-card row class="col-11 text-dark">
       <q-card-section class="bg-primary text-brand-white row q-py-lg q-px-xl">
         <q-icon name="sym_o_local_shipping" size="2rem"></q-icon>
         <div class="text-h6 q-px-md">Calculadora de Viagens</div>
@@ -121,7 +122,7 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
                 <q-icon name="fa-solid fa-hand-holding-dollar" size="1.4rem" class="q-px-md"></q-icon>
                 <h6 class="text-dark">Calcule o valor da viagem</h6>
               </div>
-              <q-form class="row flex flex-center col-12">
+              <q-form class="row flex flex-center col-12" @submit="onSubmit">
                 <q-select
                   filled
                   class="row col-6 q-mb-lg"
@@ -131,6 +132,7 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
                   label="Destino"
                   :options="citiesOptions"
                   @filter="filterFn"
+                  :rules="[val => !!val || 'Selecione um destino']"
                 >
                   <template v-slot:before>
                     <q-icon name="flight_takeoff"/>
@@ -168,14 +170,13 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
                   </q-select>
 
                 </div>
+                <q-btn class="q-mt-lg bg-secondary q-py-sm q-px-lg" label="Buscar" type="submit" flat/>
               </q-form>
-
-              <q-btn class="q-mt-lg bg-secondary q-py-sm q-px-lg" label="Buscar" flat/>
             </div>
 
 
             <div class="row col-7 rounded-borders flex flex-center">
-              <h5 v-if="!items.length" class="text-grey-7">
+              <h5 v-if="(JSON.stringify(bestOptions.confort) === '{}')" class="text-grey-7">
                 Nenhum dado selecionado.
               </h5>
               <div v-else class="row col-12 flex flex-center">
@@ -186,8 +187,8 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
 
                 <div class="row">
 
-                  <q-card class="row q-mx-lg q-my-lg" flat>
-                    <q-card-section horizontal class="">
+                  <q-card class="row q-mx-lg q-my-lg my-card" flat>
+                    <q-card-section horizontal>
                       <q-card-section class="row bg-secondary text-white flex flex-center">
                         <q-icon name="fa-solid fa-hand-holding-usd col-2" size="2.1rem"></q-icon>
                       </q-card-section>
@@ -196,7 +197,7 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
                           {{ bestOptions.confort.name.toUpperCase() }}
                         </div>
                         <div class="text-body2">
-                          Leito: {{ bestOptions.confort.seat }} (Completo)
+                          Leito: {{ bestOptions.confort.bed }} (Completo)
                         </div>
                         <div>
                           Tempo estimado: {{ bestOptions.confort.duration }}
@@ -205,12 +206,12 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
 
                     </q-card-section>
                   </q-card>
-                  <q-card class="row q-mx-lg bg-brand-grey-darker q-my-lg flex-center" flat>
+                  <q-card class="row q-mx-lg bg-brand-grey-darker q-my-lg flex-center my-card" flat>
                     <q-card-section class="col-12 text-center flex flex-center q-pb-none text-weight-bold">
                       Preço:
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                      {{ bestOptions.confort.price_confort }}
+                      R$ {{ bestOptions.confort.price_confort }}
                     </q-card-section>
                   </q-card>
 
@@ -219,8 +220,8 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
 
                 <div class="row">
 
-                  <q-card class="row q-mx-lg" flat bordered>
-                    <q-card-section horizontal class="">
+                  <q-card class="row q-mx-lg my-card" flat bordered>
+                    <q-card-section horizontal>
                       <q-card-section class="row bg-secondary text-white flex flex-center">
                         <q-icon name="sym_o_pace" size="2.1rem"></q-icon>
                       </q-card-section>
@@ -243,7 +244,7 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
                       Preço:
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                      {{ bestOptions.econ.price_econ }}
+                      R$ {{ bestOptions.econ.price_econ }}
                     </q-card-section>
                   </q-card>
                 </div>
@@ -266,5 +267,4 @@ const citiesOptions = computed(() => filteredOptions.value.length > 0? filteredO
 .rounded-borders {
   border-radius: 6px;
 }
-
 </style>
