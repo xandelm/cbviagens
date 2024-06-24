@@ -1,7 +1,6 @@
-# Resultado - Desafio CoorLab
 
 ## Introdução
-Este repositório foi desenvolvido como parte do Desafio CoorLab, um projeto para avaliar minhas habilidades em desenvolvimento web usando Vue.js para o frontend e Python para o backend.
+Este repositório foi desenvolvido como um projeto para avaliar minhas habilidades em desenvolvimento web usando Vue.js para o frontend e Python para o backend.
 
 ## Sobre
 O projeto envolve a criação de um sistema no qual usuários podem buscar viagens e comparar preços entre a opção mais confortável e rápida e a mais econômica. O projeto utiliza uma API REST que fornece dados estruturados para as cotações de viagem.
@@ -42,5 +41,3 @@ No frontend, foi desenvolvido utilizando tecnologias que tenho experiência, o q
 
 ## Conclusão
 A realização deste projeto se demonstrou frutífera, contribuindo com meus aprendizados de frontend, backend e a integração dos dois, assim como a aquisição de novos conhecimentos.
-
-Agradeço a oportunidade e espero que o projeto seja útil para a avaliação da minha candidatura!
